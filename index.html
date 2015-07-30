@@ -10,19 +10,12 @@
       <p>This is a the number <strong id="date"></strong> formatted by Globalize: <strong id="dateFormatted"></strong></p>
     </div>
 
-    <!--
-    First, we load Globalize's dependencies (`cldrjs` and its supplemental
-    module).
-    -->
+    <!-- First, we load Globalize's dependencies (`cldrjs` and its supplemental module). -->
     <script src="bower_components/cldrjs/dist/cldr.js"></script>
     <script src="bower_components/cldrjs/dist/cldr/event.js"></script>
     <script src="bower_components/cldrjs/dist/cldr/supplemental.js"></script>
 
-    <!--
-    Next, we load Globalize and its modules. Note they are already available on
-    this repository. If it's not, read Usage on Getting Started on the root's
-    README.md.
-    -->
+    <!-- Next, we load Globalize and its modules. -->
     <script src="bower_components/globalize/dist/globalize.js"></script>
     <script src="bower_components/globalize/dist/globalize/number.js"></script>
 
@@ -35,17 +28,17 @@
 
         Promise.all([
           // Core
-          fetch("bower_components/cldr-data/supplemental/likelySubtags.json"),
+          fetch('bower_components/cldr-data/supplemental/likelySubtags.json'),
 
           // Date
-          fetch("bower_components/cldr-data/main/" + locale + "/ca-gregorian.json"),
-          fetch("bower_components/cldr-data/main/" + locale + "/timeZoneNames.json"),
-          fetch("bower_components/cldr-data/supplemental/timeData.json"),
-          fetch("bower_components/cldr-data/supplemental/weekData.json"),
+          fetch('bower_components/cldr-data/main/' + locale + '/ca-gregorian.json'),
+          fetch('bower_components/cldr-data/main/' + locale + '/timeZoneNames.json'),
+          fetch('bower_components/cldr-data/supplemental/timeData.json'),
+          fetch('bower_components/cldr-data/supplemental/weekData.json'),
 
           // Number
-          fetch("bower_components/cldr-data/main/" + locale + "/numbers.json"),
-          fetch("bower_components/cldr-data/supplemental/numberingSystems.json"),
+          fetch('bower_components/cldr-data/main/' + locale + '/numbers.json'),
+          fetch('bower_components/cldr-data/supplemental/numberingSystems.json'),
         ])
         .then(function(responses) {
             return Promise.all(responses.map(function(response) {
