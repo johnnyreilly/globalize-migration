@@ -10,19 +10,60 @@
       <p>This is a the number <strong id="date"></strong> formatted by Globalize: <strong id="dateFormatted"></strong></p>
     </div>
 
-    <script src="bower_components/globalize/lib/globalize.js"></script>
-    <script src="bower_components/globalize/lib/cultures/globalize.culture.de-DE.js"></script>
-    <script>
-      var locale = 'de-DE';
-      var number = 12345.67;
-      var date = new Date(2012, 5, 15);
+    <!--
+    First, we load Globalize's dependencies (`cldrjs` and its supplemental
+    module).
+    -->
+    <script src="bower_components/cldrjs/dist/cldr.js"></script>
+    <script src="bower_components/cldrjs/dist/cldr/event.js"></script>
+    <script src="bower_components/cldrjs/dist/cldr/supplemental.js"></script>
 
-      Globalize.culture('de-DE');
-      document.querySelector('#locale').innerText = locale;
-      document.querySelector('#number').innerText = number;
-      document.querySelector('#date').innerText = date;
-      document.querySelector('#numberFormatted').innerText = Globalize.format(number, 'n2');
-      document.querySelector('#dateFormatted').innerText = Globalize.format(date, 'd');
+    <!--
+    Next, we load Globalize and its modules. Note they are already available on
+    this repository. If it's not, read Usage on Getting Started on the root's
+    README.md.
+    -->
+    <script src="bower_components/globalize/dist/globalize.js"></script>
+    <script src="bower_components/globalize/dist/globalize/number.js"></script>
+
+    <!-- Load after globalize/number.js -->
+    <script src="bower_components/globalize/dist/globalize/date.js"></script>
+
+    <script>
+
+        var locale = 'de';
+
+        Promise.all([
+          // Core
+          fetch("bower_components/cldr-data/supplemental/likelySubtags.json"),
+
+          // Date
+          fetch("bower_components/cldr-data/main/" + locale + "/ca-gregorian.json"),
+          fetch("bower_components/cldr-data/main/" + locale + "/timeZoneNames.json"),
+          fetch("bower_components/cldr-data/supplemental/timeData.json"),
+          fetch("bower_components/cldr-data/supplemental/weekData.json"),
+
+          // Number
+          fetch("bower_components/cldr-data/main/" + locale + "/numbers.json"),
+          fetch("bower_components/cldr-data/supplemental/numberingSystems.json"),
+        ])
+        .then(function(responses) {
+            return Promise.all(responses.map(function(response) {
+                return response.json();
+            }));
+        })
+        .then(Globalize.load)
+        .then(function() {
+            var number = 12345.67;
+            var date = new Date(2012, 5, 15);
+
+            var globalize = Globalize( locale );
+            document.querySelector('#locale').innerText = locale;
+            document.querySelector('#number').innerText = number;
+            document.querySelector('#date').innerText = date;
+            document.querySelector('#numberFormatted').innerText = globalize.formatNumber(number, { minimumFractionDigits: 2, useGrouping: true });
+            document.querySelector('#dateFormatted').innerText = globalize.formatDate(date, { date: 'medium' });
+        })
     </script>
   </body>
 </html>
